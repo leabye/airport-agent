@@ -1,36 +1,60 @@
 # US Airport Modernization Agent
 
-Conversational agent that ranks **US** airports for modernization investment
-using a **deterministic** score (demand × congestion proxy) plus an LLM only
-for intent parsing and explanation.
+This agent screens **US airports** for a firm that funds terminal / flight-capacity
+modernization. It answers in a chat (optional microphone next to Send).
 
-## Quick start
+The ranking is a **deterministic score**, not an LLM guess. The model may parse the
+question and explain the table. It does **not** invent airport KPIs.
+
+Live public APIs: [Airport Gap](https://airportgap.com),
+[FAA ASWS](https://nasstatus.faa.gov/), [OpenSky](https://opensky-network.org).
+Route demand and long-haul % come from bundled files in `data/` (datasets, not APIs).
+
+```
+investment_score = 100 × (
+    0.30·demand + 0.30·congestion + 0.25·unmet_demand + 0.15·long_haul
+)
+```
+
+Scores are min-max **inside the current comparison**. This is **not** a dollar NPV
+(no construction cost, fares, or politics). `long_haul_pct` counts unique published
+routes, not seats or weekly frequencies.
+
+Scope: **US only**. Vague questions with no US airport or region get a reminder
+instead of ranking the whole country. Follow-ups such as “why the first airport?”
+reuse the last table.
+
+Full method: [`DESIGN.md`](DESIGN.md).
+
+## Run
 
 ```bash
 pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...   # optional; keyword parser works without it
 streamlit run app.py
 ```
 
-Try the assignment prompts:
+`ANTHROPIC_API_KEY` is **optional**. Without it, a keyword parser still ranks and
+explains.
+
+Try:
 
 - Which airports in New England are strong candidates for terminal expansion?
 - Compare LA and Santa Ana airport congestion levels.
 - What is the percentage of long haul flights out of Anchorage airport?
 - What is the unmet flight demand in SFO airport and why?
 
+Then: `why the first airport?` · `which` (should stay in scope, not rank all US).
+
 ## Layout
 
 | File | Role |
 |---|---|
-| `data_fetcher.py` | Airport Gap + FAA + OpenSky (REST). Local `data/` catalog + routes. No scoring. |
-| `scoring.py` | Deterministic investment score. Unit-tested. |
-| `llm_interface.py` | Claude (or heuristic fallback). Parse + explain only. |
-| `app.py` | Streamlit chat (+ optional browser voice). |
+| `data_fetcher.py` | Airport Gap + FAA + OpenSky (REST). Local `data/` catalog + routes. |
+| `scoring.py` | Deterministic investment score. |
+| `llm_interface.py` | Parse + explain only. |
+| `app.py` | Streamlit chat + voice. |
 | `regions.py` | US region boxes and airport aliases. |
-| `DESIGN.md` | Scoring, tradeoffs, where AI is used. |
-
-## Tests (no API key)
+| `DESIGN.md` | Scoring, data, where AI is used. |
 
 ```bash
 pytest test_scoring.py -v
