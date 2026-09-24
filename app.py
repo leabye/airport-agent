@@ -94,6 +94,9 @@ st.markdown(
     .block-container { padding-top: 1.4rem; max-width: 1120px; }
     header[data-testid="stHeader"] { background: transparent; }
     [data-testid="stDecoration"] { display: none; }
+    [data-testid="stAppDeployButton"] { display: none !important; }
+    .stAppDeployButton { display: none !important; }
+     div[data-testid="stToolbar"] { display: none !important; }
     .hero {
         border: 1px solid rgba(125, 211, 252, 0.18);
         background: linear-gradient(135deg, rgba(18, 32, 51, 0.92), rgba(8, 17, 28, 0.65));
