@@ -29,21 +29,26 @@ Full method: [`DESIGN.md`](DESIGN.md).
 ## Run
 
 Needs Python 3.10+. Opens http://localhost:8501
+
 **Mac** (Terminal):
+
 ```bash
 cd airport-agent-main
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -r requirements.txt
 python3 -m streamlit run app.py
+```
 
 **Windows** (PowerShell):
 
+```powershell
 cd airport-agent-main
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python -m streamlit run app.py
+```
 
 `ANTHROPIC_API_KEY` is **optional**. Without it, a keyword parser still ranks and
 explains.
@@ -69,5 +74,4 @@ Then: `why the first airport?` · `which` (should stay in scope, not rank all US
 | `DESIGN.md` | Scoring, data, where AI is used. |
 
 ```bash
-pytest test_scoring.py -v
-```
+python3 -m pytest test_scoring.py -v```
