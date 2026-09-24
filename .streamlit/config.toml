@@ -1,5 +1,7 @@
 [browser]
 gatherUsageStats = false
+[client]
+toolbarMode = "minimal"
 
 [theme]
 base = "dark"
